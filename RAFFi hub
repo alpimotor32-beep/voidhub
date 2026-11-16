@@ -1,0 +1,221 @@
+-- RAFFI HUB - Survive Your Ideas
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local UserInputService = game:GetService("UserInputService")
+local localPlayer = Players.LocalPlayer
+
+-- Hapus GUI lama jika ada
+if CoreGui:FindFirstChild("RaffiHub") then
+    CoreGui.RaffiHub:Destroy()
+end
+
+-- Buat ScreenGui Utama
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "RaffiHub"
+ScreenGui.Parent = CoreGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -160)
+MainFrame.Size = UDim2.new(0, 350, 0, 320)
+MainFrame.Active = true
+MainFrame.Draggable = true
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
+
+-- Judul (Diubah jadi RAFFI HUB)
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 15, 0, 10)
+Title.Size = UDim2.new(1, -30, 0, 30)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "RAFFI HUB - Survive Your Ideas"
+Title.TextColor3 = Color3.fromRGB(100, 200, 255)
+Title.TextSize = 14
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Tombol Close (X)
+local Close = Instance.new("TextButton")
+Close.Parent = MainFrame
+Close.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+Close.Position = UDim2.new(1, -35, 0, 10)
+Close.Size = UDim2.new(0, 25, 0, 25)
+Close.Font = Enum.Font.GothamBold
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", Close).CornerRadius = UDim.new(0, 4)
+Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+-- ScrollingFrame untuk Menu di dalam
+local ScrollContainer = Instance.new("ScrollingFrame")
+ScrollContainer.Parent = MainFrame
+ScrollContainer.BackgroundTransparency = 1
+ScrollContainer.Position = UDim2.new(0, 15, 0, 50)
+ScrollContainer.Size = UDim2.new(1, -30, 1, -60)
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 350)
+ScrollContainer.ScrollBarThickness = 4
+
+-- 1. Tombol Speed Hack (WalkSpeed: 35)
+local SpeedBtn = Instance.new("TextButton")
+SpeedBtn.Parent = ScrollContainer
+SpeedBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+SpeedBtn.Position = UDim2.new(0, 0, 0, 10)
+SpeedBtn.Size = UDim2.new(0, 310, 0, 40)
+SpeedBtn.Font = Enum.Font.GothamBold
+SpeedBtn.Text = "Speed Hack (35): [OFF]"
+SpeedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", SpeedBtn).CornerRadius = UDim.new(0, 6)
+
+local speedOn = false
+SpeedBtn.MouseButton1Click:Connect(function()
+    speedOn = not speedOn
+    if speedOn then
+        SpeedBtn.BackgroundColor3 = Color3.fromRGB(50, 180, 50)
+        SpeedBtn.Text = "Speed Hack (35): [ON]"
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            localPlayer.Character.Humanoid.WalkSpeed = 35
+        end
+    else
+        SpeedBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        SpeedBtn.Text = "Speed Hack (35): [OFF]"
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            localPlayer.Character.Humanoid.WalkSpeed = 16
+        end
+    end
+end)
+
+-- 2. Tombol Infinite Jump
+local InfJumpBtn = Instance.new("TextButton")
+InfJumpBtn.Parent = ScrollContainer
+InfJumpBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+InfJumpBtn.Position = UDim2.new(0, 0, 0, 60)
+InfJumpBtn.Size = UDim2.new(0, 310, 0, 40)
+InfJumpBtn.Font = Enum.Font.GothamBold
+InfJumpBtn.Text = "Infinite Jump: [OFF]"
+InfJumpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", InfJumpBtn).CornerRadius = UDim.new(0, 6)
+
+local infJumpOn = false
+InfJumpBtn.MouseButton1Click:Connect(function()
+    infJumpOn = not infJumpOn
+    if infJumpOn then
+        InfJumpBtn.BackgroundColor3 = Color3.fromRGB(50, 180, 50)
+        InfJumpBtn.Text = "Infinite Jump: [ON]"
+    else
+        InfJumpBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        InfJumpBtn.Text = "Infinite Jump: [OFF]"
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if infJumpOn then
+        local char = localPlayer.Character
+        if char and char:FindFirstChildOfClass("Humanoid") then
+            char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+-- 3. Tombol All Disasters / Weather / Benda Spawner Helper
+local DisasterBtn = Instance.new("TextButton")
+DisasterBtn.Parent = ScrollContainer
+DisasterBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+DisasterBtn.Position = UDim2.new(0, 0, 0, 110)
+DisasterBtn.Size = UDim2.new(0, 310, 0, 40)
+DisasterBtn.Font = Enum.Font.GothamBold
+DisasterBtn.Text = "Auto Trigger / Interact Ideas (Bencana/Benda)"
+DisasterBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DisasterBtn.TextSize = 11
+Instance.new("UICorner", DisasterBtn).CornerRadius = UDim.new(0, 6)
+
+DisasterBtn.MouseButton1Click:Connect(function()
+    for _, obj in pairs(Workspace:GetDescendants()) do
+        if obj:IsA("ProximityPrompt") then
+            fireproximityprompt(obj)
+        end
+    end
+    DisasterBtn.BackgroundColor3 = Color3.fromRGB(100, 50, 200)
+    DisasterBtn.Text = "Berhasil Memicu Interaksi Benda/Ide!"
+    task.wait(1)
+    DisasterBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    DisasterBtn.Text = "Auto Trigger / Interact Ideas (Bencana/Benda)"
+end)
+
+-- 4. Full Bright (Anti Gelap / Cuaca Gelap)
+local BrightBtn = Instance.new("TextButton")
+BrightBtn.Parent = ScrollContainer
+BrightBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+BrightBtn.Position = UDim2.new(0, 0, 0, 160)
+BrightBtn.Size = UDim2.new(0, 310, 0, 40)
+BrightBtn.Font = Enum.Font.GothamBold
+BrightBtn.Text = "Full Bright (Anti Gelap): [OFF]"
+BrightBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", BrightBtn).CornerRadius = UDim.new(0, 6)
+
+local brightOn = false
+BrightBtn.MouseButton1Click:Connect(function()
+    brightOn = not brightOn
+    if brightOn then
+        BrightBtn.BackgroundColor3 = Color3.fromRGB(50, 180, 50)
+        BrightBtn.Text = "Full Bright (Anti Gelap): [ON]"
+        Lighting.Brightness = 2
+        Lighting.ClockTime = 14
+        Lighting.FogEnd = 100000
+    else
+        BrightBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        BrightBtn.Text = "Full Bright (Anti Gelap): [OFF]"
+        Lighting.Brightness = 1
+        Lighting.ClockTime = 0
+    end
+end)
+
+-- 5. ESP / Highlight Semua Benda & Elemen di Map
+local EspBtn = Instance.new("TextButton")
+EspBtn.Parent = ScrollContainer
+EspBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+EspBtn.Position = UDim2.new(0, 0, 0, 210)
+EspBtn.Size = UDim2.new(0, 310, 0, 40)
+EspBtn.Font = Enum.Font.GothamBold
+EspBtn.Text = "ESP / Highlight Benda & Ide: [OFF]"
+EspBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+EspBtn.TextSize = 12
+Instance.new("UICorner", EspBtn).CornerRadius = UDim.new(0, 6)
+
+local espFolder = Instance.new("Folder")
+espFolder.Name = "IdeasESP"
+espFolder.Parent = CoreGui
+local espOn = false
+
+EspBtn.MouseButton1Click:Connect(function`()
+    espOn = not espOn
+    if espOn then
+        EspBtn.BackgroundColor3 = Color3.fromRGB(50, 180, 50)
+        EspBtn.Text = "ESP / Highlight Benda & Ide: [ON]"
+        task.spawn(function()
+            while espOn do
+                for _, obj in pairs(Workspace:GetDescendants()) do
+                    if obj:IsA("BasePart") and not obj:FindFirstChild("Highlight") then
+                        local hl = Instance.new("Highlight")
+                        hl.Parent = obj
+                        hl.FillColor = Color3.fromRGB(255, 255, 0)
+                    end
+                end
+                task.wait(4)
+            end
+        end)
+    else
+        EspBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        EspBtn.Text = "ESP / Highlight Benda & Ide: [OFF]"
+        for _, obj in pairs(Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local hl = obj:FindFirstChildOfClass("Highlight")
+                if hl then hl:Destroy() end
+            end
+        end
+    end
+end)
+
+print("Raffi Hub Berhasil Dimuat!")
