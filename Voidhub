@@ -1,0 +1,307 @@
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+
+-- Hapus GUI lama jika ada
+if CoreGui:FindFirstChild("VoidHubModern") then
+    CoreGui.VoidHubModern:Destroy()
+end
+
+-- Membuat ScreenGui Utama
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "VoidHubModern"
+ScreenGui.Parent = CoreGui
+
+-- Frame Utama (Gaya Modern Gelap)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 500, 0, 320)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 8)
+MainCorner.Parent = MainFrame
+
+-- Top Bar / Header
+local TopBar = Instance.new("Frame")
+TopBar.Name = "TopBar"
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TopBar.Size = UDim2.new(1, 0, 0, 35)
+
+local TopCorner = Instance.new("UICorner")
+TopCorner.CornerRadius = UDim.new(0, 8)
+TopCorner.Parent = TopBar
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Parent = TopBar
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 15, 0, 0)
+TitleLabel.Size = UDim2.new(0, 250, 1, 0)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "VOID HUB - Malam Bersama Opah"
+TitleLabel.TextColor3 = Color3.fromRGB(150, 100, 255)
+TitleLabel.TextSize = 15
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Tombol Close (X)
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = TopBar
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseBtn.Position = UDim2.new(1, -30, 0, 7)
+CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.TextSize = 12
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 4)
+CloseCorner.Parent = CloseBtn
+
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Sidebar Tab Kiri
+local Sidebar = Instance.new("ScrollingFrame")
+Sidebar.Name = "Sidebar"
+Sidebar.Parent = MainFrame
+Sidebar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Sidebar.Position = UDim2.new(0, 0, 0, 35)
+Sidebar.Size = UDim2.new(0, 130, 1, -35)
+Sidebar.CanvasSize = UDim2.new(0, 0, 0, 250)
+Sidebar.ScrollBarThickness = 2
+
+-- Container Konten Kanan
+local Container = Instance.new("Frame")
+Container.Name = "Container"
+Container.Parent = MainFrame
+Container.BackgroundTransparency = 1
+Container.Position = UDim2.new(0, 140, 0, 45)
+Container.Size = UDim2.new(1, -150, 1, -55)
+
+-- Fungsi untuk membuat halaman / tab
+local pages = {}
+local function createPage(name)
+    local page = Instance.new("ScrollingFrame")
+    page.Name = name .. "Page"
+    page.Parent = Container
+    page.BackgroundTransparency = 1
+    page.Size = UDim2.new(1, 0, 1, 0)
+    page.CanvasSize = UDim2.new(0, 0, 0, 300)
+    page.ScrollBarThickness = 3
+    page.Visible = false
+    pages[name] = page
+    return page
+end
+
+local function createTab(name, posY, isDefault)
+    local btn = Instance.new("TextButton")
+    btn.Parent = Sidebar
+    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    btn.Position = UDim2.new(0, 10, 0, posY)
+    btn.Size = UDim2.new(0, 110, 0, 32)
+    btn.Font = Enum.Font.GothamBold
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    btn.TextSize = 13
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = btn
+
+    local page = createPage(name)
+
+    if isDefault then
+        page.Visible = true
+        btn.BackgroundColor3 = Color3.fromRGB(100, 50, 200)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end
+
+    btn.MouseButton1Click:Connect(function()
+        for _, p in pairs(pages) do p.Visible = false end
+        for _, b in pairs(Sidebar:GetChildren()) do
+            if b:IsA("TextButton") then
+                b.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                b.TextColor3 = Color3.fromRGB(200, 200, 200)
+            end
+        end
+        page.Visible = true
+        btn.BackgroundColor3 = Color3.fromRGB(100, 50, 200)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end)
+end
+
+-- Buat Tab Menu Samping
+createTab("Main Farm", 10, true)
+createTab("Visual / ESP", 50, false)
+createTab("Secret Ending", 90, false)
+createTab("Player", 130, false)
+
+-- ==========================================
+-- ISI KONTEN TAB: MAIN FARM
+-- ==========================================
+local farmPage = pages["MainFarm"]
+
+local autoDoorBtn = Instance.new("TextButton")
+autoDoorBtn.Parent = farmPage
+autoDoorBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+autoDoorBtn.Size = UDim2.new(0, 335, 0, 35)
+autoDoorBtn.Font = Enum.Font.GothamBold
+autoDoorBtn.Text = "Auto Farm / Open Doors: [OFF]"
+autoDoorBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoDoorBtn.TextSize = 12
+Instance.new("UICorner", autoDoorBtn).CornerRadius = UDim.new(0, 6)
+
+local autoDoorActive = false
+autoDoorBtn.MouseButton1Click:Connect(function()
+    autoDoorActive = not autoDoorActive
+    if autoDoorActive then
+        autoDoorBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        autoDoorBtn.Text = "Auto Farm / Open Doors: [ON]"
+        task.spawn(function()
+            while autoDoorActive do
+                for _, obj in pairs(Workspace:GetDescendants()) do
+                    if obj:IsA("ProximityPrompt") then
+                        fireproximityprompt(obj)
+                    end
+                end
+                task.wait(0.4)
+            end
+        end)
+    else
+        autoDoorBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        autoDoorBtn.Text = "Auto Farm / Open Doors: [OFF]"
+    end
+end)
+
+-- ==========================================
+-- ISI KONTEN TAB: VISUAL / ESP
+-- ==========================================
+local visualPage = pages["Visual / ESP"]
+
+local brightBtn = Instance.new("TextButton")
+brightBtn.Parent = visualPage
+brightBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+brightBtn.Size = UDim2.new(0, 335, 0, 35)
+brightBtn.Font = Enum.Font.GothamBold
+brightBtn.Text = "Full Bright (Anti Gelap): [OFF]"
+brightBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+brightBtn.TextSize = 12
+Instance.new("UICorner", brightBtn).CornerRadius = UDim.new(0, 6)
+
+local brightOn = false
+brightBtn.MouseButton1Click:Connect(function()
+    brightOn = not brightOn
+    if brightOn then
+        brightBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        brightBtn.Text = "Full Bright (Anti Gelap): [ON]"
+        Lighting.Brightness = 2 Lighting.ClockTime = 14 Lighting.FogEnd = 100000
+    else
+        brightBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        brightBtn.Text = "Full Bright (Anti Gelap): [OFF]"
+        Lighting.Brightness = 1 Lighting.ClockTime = 0
+    end
+end)
+
+local espBtn = Instance.new("TextButton")
+espBtn.Parent = visualPage
+espBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+espBtn.Position = UDim2.new(0, 0, 0, 45)
+espBtn.Size = UDim2.new(0, 335, 0, 35)
+espBtn.Font = Enum.Font.GothamBold
+espBtn.Text = "ESP Kunci / Item: [OFF]"
+espBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+espBtn.TextSize = 12
+Instance.new("UICorner", espBtn).CornerRadius = UDim.new(0, 6)
+
+local espFolder = Instance.new("Folder")
+espFolder.Name = "VoidESP"
+espFolder.Parent = CoreGui
+local espOn = false
+
+espBtn.MouseButton1Click:Connect(function()
+    espOn = not espOn
+    if espOn then
+        espBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        espBtn.Text = "ESP Kunci / Item: [ON]"
+        task.spawn(function()
+            while espOn do
+                for _, obj in pairs(Workspace:GetDescendants()) do
+                    if obj:IsA("BasePart") and (obj.Name:lower():find("key") or obj.Name:lower():find("kunci") or obj.Name:lower():find("item")) then
+                        if not espFolder:FindFirstChild(obj.GetFullName()) then
+                            local hl = Instance.new("Highlight")
+                            hl.Name = obj.GetFullName()
+                            hl.Adornee = obj
+                            hl.FillColor = Color3.fromRGB(255, 255, 0)
+                            hl.Parent = espFolder
+                        end
+                    end
+                end
+                task.wait(3)
+            end
+        end)
+    else
+        espBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        espBtn.Text = "ESP Kunci / Item: [OFF]"
+        espFolder:ClearAllChildren()
+    end
+end)
+
+-- ==========================================
+-- ISI KONTEN TAB: SECRET ENDING
+-- ==========================================
+local secretPage = pages["Secret Ending"]
+
+local secretInfo = Instance.new("TextLabel")
+secretInfo.Parent = secretPage
+secretInfo.BackgroundTransparency = 1
+secretInfo.Size = UDim2.new(0, 335, 0, 80)
+secretInfo.Font = Enum.Font.Gotham
+secretInfo.Text = "Panduan Secret Ending:\n1. Nyalakan Full Bright & ESP Kunci.\n2. Ambil bensin & kunci mobil di garasi.\n3. Kabur lewat mobil untuk buka Secret Ending!"
+secretInfo.TextColor3 = Color3.fromRGB(255, 220, 100)
+secretInfo.TextSize = 12
+secretInfo.TextWrapped = true
+secretInfo.TextXAlignment = Enum.TextXAlignment.Left
+
+-- ==========================================
+-- ISI KONTEN TAB: PLAYER
+-- ==========================================
+local playerPage = pages["Player"]
+
+local speedBtn = Instance.new("TextButton")
+speedBtn.Parent = playerPage
+speedBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+speedBtn.Size = UDim2.new(0, 335, 0, 35)
+speedBtn.Font = Enum.Font.GothamBold
+speedBtn.Text = "Speed Hack (Lari Cepat): [OFF]"
+speedBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedBtn.TextSize = 12
+Instance.new("UICorner", speedBtn).CornerRadius = UDim.new(0, 6)
+
+local speedOn = false
+speedBtn.MouseButton1Click:Connect(function()
+    speedOn = not speedOn
+    if speedOn then
+        speedBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        speedBtn.Text = "Speed Hack (Lari Cepat): [ON]"
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            localPlayer.Character.Humanoid.WalkSpeed = 30
+        end
+    else
+        speedBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        speedBtn.Text = "Speed Hack (Lari Cepat): [OFF]"
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            localPlayer.Character.Humanoid.WalkSpeed = 16
+        end
+    end
+end)
+
+print("Void Hub [Malam Bersama Opah] berhasil dimuat!")
